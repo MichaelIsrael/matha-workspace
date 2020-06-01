@@ -18,19 +18,19 @@ INCDIR := .
 
 CPPFLAGS := -g -I${INCDIR} -c -Wall -fPIC
 
-LDFLAGS := -lglut -lGLU -lX11
+LDFLAGS := -lglut -lGLU -lGL -lX11
 
 mathaws: ${MWSOBJS}
-	${CC} ${LDFLAGS} -o $@ $^
+	${CC} -o $@ $^ ${LDFLAGS}
 
 %.o: %.cpp
 	${CC} ${CPPFLAGS} -o $@ $<
 
 test_mwsShObj: libtest_ShObj.so test_mwsShObj.o
-	${CC} -g -I./ -Wall -ldl test_mwsShObj.o -o $@
+	${CC} -g -I./ -Wall -ldl test_mwsShObj.o -o $@ -ldl
 
 libtest_ShObj.so: test_ShObj.o
-	${CC} -g -shared -Wall,-soname,libtest_ShObj.so.1 -o libtest_ShObj.so.1.0.0 test_ShObj.o
+	${CC} -g -shared -Wl,-soname,libtest_ShObj.so.1 -o libtest_ShObj.so.1.0.0 test_ShObj.o
 	ln -sf libtest_ShObj.so.1.0.0 libtest_ShObj.so
 
 clean:
